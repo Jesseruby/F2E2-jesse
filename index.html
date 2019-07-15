@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Jesse">
+  <title>W1ClockByJesse</title>
+  <style type="text/css">
+    :root {
+      --lightPink: #FFEDF7;
+      --babyPink: #f4c2c2;
+      --deepPink: #FF4384;
+      --deepBlue: #003164;
+      --white: #fff;  
+    }
+    *{
+      font-family: 'Roboto', '微軟正黑體', sans-serif;
+      font-weight: bold;
+    /*   outline: 1px solid #f00; */
+    }
+    div {
+      text-align: center;
+      margin: 0 auto;
+    }
+    .container {  
+      width: 670px;  
+      margin-top: 40px;
+    }
+    h1 {
+      color: var(--deepPink);  
+      font-size: 60px;
+      margin-bottom: 60px;
+    }
+    h2 {
+      color: var(--deepPink); 
+      font-size: 70px; 
+    }
+    #time {
+      margin-top: -210px;
+    }
+    h3 {
+      color: var(--deepPink); 
+      font-size: 20px;
+    }
+    .pause {
+      margin-top: -50px;
+    }
+    #reset {
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    h4 {
+      color: var(--deepPink); 
+      font-size: 30px;
+      margin-bottom: -10px; 
+    }
+    .leftSide {
+      float: left;
+      width: 370px;
+      height: 500px;
+      background-color: var(--lightPink);
+    }
+    .rightSide {
+      width: 300px;
+      height: 440px;
+      margin-right: 0px;
+      padding-top: 60px;
+      background-color: var(--deepBlue);
+    }
+    svg {
+      border-radius: 50%;
+    }
+    #addFont{
+      width: 300px;
+      height: 30px;
+      line-height: 30px;
+      background-color: var(--white);
+      margin-top: 30px;
+    }
+    #addFont span{
+      color: var(--deepPink);
+      font-size: 15px;
+    }
+    .addFont1{
+      float: left;
+      margin-left: 10px;
+    }
+    .addFont2{
+      float: right;
+      margin-right: 10px;
+    }
+    #mainTitle{
+      color: var(--white);
+      margin-top: -30px;
+      margin-bottom: -40px;
+      font-size: 30px;
+      font-style: italic;
+    }
+    .titleMargin1{
+      margin-top: 100px;
+      margin-bottom: 5px;
+    }
+    .titleMargin2{
+      margin-top: 60px;
+      margin-bottom: 5px;
+    }
+    .circle {
+      margin-top: 40px;
+      cursor: pointer;
+      height: 310px;
+      width: 310px;
+      border-radius: 50%;
+    }
+    span {
+      color: #fff;
+      font-size: 50px;
+    }
+    .sign {
+      color: var(--babyPink);
+    } 
+    #plus, #minus {
+      cursor: pointer;
+    }
+    #timerWeb {
+      stroke-dasharray: 943;
+      stroke-dashoffset: 0;
+      transform: rotate(-90deg);
+      transform-origin: center center;
+    }
+    .reset {
+      width: 90px;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Week-1-PomodoroClock-byJesse -->
+<!-- 字體 -->
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<!-- 內容 -->
+<div class="container">
+  <div class="leftSide">
+    <div id="addFont">
+      <span class="addFont1">添加新任務......</span>
+      <span class="addFont2">+</span>
+    </div>
+    <!-- 點擊圈圈 -->
+    <div class="circle" onclick="startStop()">
+      <svg class = "web" width="310" height="310">
+        <circle class="web" cx="50%" cy="50%" r="150" fill="none" stroke="#FFEDF7" stroke-width="10"></circle>
+        <circle class="web" id="timerWeb" cx="50%" cy="50%" r="150" fill="none" stroke="#FF4384" stroke-width="10"></circle>     
+      </svg>
+     <!-- 點擊數字 -->     
+      <h2 id="time">25:00</h2>
+      <h3 class="pause" id="pause">點擊開始</h3>      
+    </div>
+    <div class="reset" onclick="resetTimer()">
+      <h3 id="reset">重新設定</h3>
+    </div>
+  </div>
+  <div class="rightSide">
+    <h4 id="mainTitle">POMODORO 番茄鐘</h4>
+    <h4 class="titleMargin1">時間長度</h4>
+    <span id="minus" class="sign" onclick="reduce()">-</span>&nbsp;&nbsp;&nbsp;
+    <span id="session">25</span>&nbsp;&nbsp;
+    <span id="plus" class="sign" onclick="add()">+</span>
+    <h4 class="titleMargin2">循環次數</h4>
+    <span class="sign">#</span>
+    <span id="count">0</span>
+  </div>
+</div>
+
+<script  src="./script.js">
+  var session = document.getElementById("session");
+  var time = document.getElementById("time");
+  var reset = document.getElementById("reset");
+
+  if (window.getComputedStyle(document.getElementById("timerWeb"),null).getPropertyValue("display") != "none") {
+    var timer = document.getElementById("timerWeb");
+    var dasharray = 943;
+  }
+  else {
+    var timer = document.getElementById("timerMobile");
+    var dasharray = 566;
+  }
+
+  var pause = document.getElementById("pause");
+  var count = document.getElementById("count");
+  var isWorking = false;
+  var mins = parseInt(session.innerHTML);
+  var secs = 0;
+
+  function add() {
+    if (session.innerHTML < 60) {
+      session.innerHTML = parseInt(session.innerHTML) + 1;
+      resetTimer();  
+    }
+  }
+
+  function reduce() {
+    if (session.innerHTML > 1) {
+      session.innerHTML = parseInt(session.innerHTML) - 1;
+      resetTimer();   
+    }
+  }
+    
+
+  function resetTimer() {
+      if (session.innerHTML >= 10) {
+        time.innerHTML = session.innerHTML + ":00";
+      }
+      else {
+        time.innerHTML = "0" + session.innerHTML + ":00";
+      } 
+    
+     mins = parseInt(session.innerHTML);
+     secs = 0;
+    
+    if (isWorking == true) {
+      startStop();
+    }
+    timer.style.strokeDashoffset = 0;
+  }
+
+  var wait = false;
+  var verify = true; //允許 1 按一下
+
+  function startStop() {
+      if (verify == true){
+
+        if ((isWorking == false) && ((mins > 0) || (secs > 0))) {
+          pause.innerHTML = "點擊暫停";
+          isWorking = true;
+          
+              var timerOut = setInterval(function() {
+                if ((mins > 0) || (secs > 0)) {
+                    if (isWorking == true) {
+                        if (secs > 0) {secs--;} else {secs = 59; mins--;}
+                        if (mins >= 10) {time.innerHTML =  mins + ":";}
+                            else {time.innerHTML = "0" + mins + ":";}
+                        if (secs >= 10) {time.innerHTML =  time.innerHTML + secs;}
+                            else {time.innerHTML = time.innerHTML + "0" + secs;}
+                        timer.style.strokeDashoffset -= dasharray/(parseInt(session.innerHTML)*60);
+                      }
+                      else {
+                        clearInterval(timerOut);
+                      }
+                }
+                else {
+                    clearInterval(timerOut);
+                    pause.innerHTML = "點擊開始";
+                    isWorking = false;
+                    count.innerHTML = parseInt(count.innerHTML) + 1;
+                }              
+              }, 1000);        
+      }
+      else {
+          pause.innerHTML = "點擊開始";
+          isWorking = false;
+      }
+        verify = false;
+        setTimeout (function() { verify = true; }, 1000); 
+    } 
+  }
+</script>
+
+</body>
+</html>
